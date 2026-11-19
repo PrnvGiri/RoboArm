@@ -4,19 +4,27 @@ An Arduino-powered 4-Degree-of-Freedom (4-DOF) articulated robotic arm controlle
 
 ---
 
-## 📸 Visual Showcase & Step-by-Step Guide
+## 📸 Complete 3-Step Visual Guide
 
-### 1. Fully Assembled Robotic Arm
-![Assembled Robotic Arm](robotic_arm_assembled.png)
+### Step 1 of 3: Setup & Assembly
+> *Prepare all components and assemble the robotic arm chassis, joints, and servos.*
+![Step 1 of 3: Setup & Assembly](step_1_setup_and_assembly.png)
 
-### 2. Dual-Axis Joystick Controllers
-![Dual Joystick Controllers](joystick_modules.png)
+### Step 2 of 3: Wiring & Connections
+> *Connect the 4 servos, 2 joystick modules, and breadboard power rails to the Arduino Uno.*
+![Step 2 of 3: Wiring & Connections](step_2_wiring_and_connections.png)
 
-### 3. Circuit & Breadboard Wiring Setup
-![Arduino & Breadboard Circuit Setup](arduino_circuit_setup.png)
+### Step 3 of 3: Code, Calibration & Testing
+> *Upload the Arduino firmware, verify joystick directions, calibrate angle limits, and test movements.*
+![Step 3 of 3: Code, Calibration & Testing](step_3_code_calibration_and_testing.png)
 
-### 4. Comprehensive Step-by-Step Infographic Guide
-![Step by Step Setup & Wiring Guide](step_by_step_guide.png)
+---
+
+## 📷 Hardware Photos & Overview
+
+| Assembled Robotic Arm | Dual Joystick Modules | Circuit & Breadboard Wiring |
+| :---: | :---: | :---: |
+| ![Assembled Robotic Arm](robotic_arm_assembled.png) | ![Dual Joystick Controllers](joystick_modules.png) | ![Arduino Circuit Setup](arduino_circuit_setup.png) |
 
 ---
 
@@ -28,6 +36,7 @@ An Arduino-powered 4-Degree-of-Freedom (4-DOF) articulated robotic arm controlle
 - [Step-by-Step Setup Guide](#-step-by-step-setup-guide)
 - [Calibration & Tuning](#-calibration--tuning)
 - [Troubleshooting & Pro Tips](#-troubleshooting--pro-tips)
+- [File Structure](#-file-structure)
 
 ---
 
@@ -138,37 +147,50 @@ The firmware initializes the serial port at **9600 baud** in `setup()`.
 ## 🚀 Step-by-Step Setup Guide
 
 ### Step 1: Mechanical Assembly & Pre-Zeroing
-1. Assemble the laser-cut arm brackets according to your kit's mechanical blueprint.
-2. **Before screwing the servo horns onto the motor splines:**
-   - Flash `main.ino` onto the Arduino.
-   - Connect the servos to their respective signal pins.
-   - Power up the Arduino so all 4 servos travel to their default initialization angles:
+1. Assemble the laser-cut arm brackets according to your kit's mechanical blueprint:
+   - **1. Prepare the Base:** Fix standoffs and screws onto the main base plate.
+   - **2. Mount the Base Servo:** Fasten the rotating base servo controlling horizontal swivel.
+   - **3. Add Shoulder Link:** Attach the shoulder bracket to the base servo.
+   - **4. Mount Elbow Servo:** Mount the elbow servo onto the shoulder link for vertical flexion.
+   - **5. Add Gripper & Final Links:** Connect the forearm linkages and mount the gripper claw servo.
+2. **Before tightening servo horn screws onto splines:**
+   - Flash `main.ino` onto the Arduino Uno.
+   - Power up the Arduino so all 4 servos travel to their zeroing angles:
      - Gripper: **0°**
      - Base: **0°**
      - Elbow: **180°**
      - Shoulder: **180°**
-3. Once the servos have settled at these angles, attach the mechanical horns and linkages in their natural resting positions. This prevents mechanical strain and stripped gears.
+   - Align horns at these default positions before fastening screws to avoid stripped gears or binding.
 
 ### Step 2: Breadboard & Circuit Wiring
-1. Route Arduino **5V** and **GND** to the breadboard side rails.
-2. Plug both Joystick modules into the breadboard.
-3. Wire Joystick 1 (Left) pins `VRX -> A4`, `VRY -> A5`, `+5V`, and `GND`.
-4. Wire Joystick 2 (Right) pins `VRX -> A2`, `VRY -> A3`, `+5V`, and `GND`.
-5. Connect Servo signal lines to Arduino digital pins:
+1. Connect Arduino **5V** and **GND** to the breadboard side rails.
+2. Mount both joystick modules on the breadboard or wire them with female-to-male jumpers.
+3. Wire Joystick 1 (Left): `VRX -> A4`, `VRY -> A5`, `VCC -> 5V`, `GND -> GND`.
+4. Wire Joystick 2 (Right): `VRX -> A2`, `VRY -> A3`, `VCC -> 5V`, `GND -> GND`.
+5. Connect Servo signal lines to Arduino digital PWM pins:
    - Motor 1 (Gripper): **D5**
-   - Motor 2 (Base): **D3**
-   - Motor 3 (Elbow): **D4**
-   - Motor 4 (Shoulder): **D2**
+   - Motor 2 (Base Rotation): **D3**
+   - Motor 3 (Elbow Joint): **D4**
+   - Motor 4 (Shoulder Joint): **D2**
 6. Connect all Servo red wires to `+5V` and brown/black wires to `GND`.
 
-### Step 3: Software & Upload
+### Step 3: Software, Calibration & Testing
 1. Launch the **Arduino IDE** (version 1.8+ or 2.x).
 2. Open [`main.ino`](file:///Users/pranav/PRNV/RoboticArm/main.ino).
-3. Connect the Arduino Uno to your computer with the USB cable.
-4. Go to **Tools > Board > Arduino AVR Boards > Arduino Uno**.
-5. Select your Arduino's serial port under **Tools > Port**.
-6. Click **Upload** (`Ctrl+U` or `Cmd+U`).
-7. Open the **Serial Monitor** at **9600 Baud** to verify initialization.
+3. Connect the Arduino Uno to your computer using the USB cable.
+4. Select **Tools > Board > Arduino AVR Boards > Arduino Uno**.
+5. Select the active port under **Tools > Port**.
+6. Click **Upload** (`Ctrl+U` / `Cmd+U`) and wait for `"Done Uploading"`.
+7. Open the **Serial Monitor** at **9600 Baud** to verify startup messages:
+   ```
+   ROBOTIC ARM INITIALIZED
+   Joystick Control Ready
+   ```
+8. **Testing Workflow:**
+   - Power on the setup.
+   - Test each joystick axis independently.
+   - Check corresponding movements (Gripper, Base, Elbow, Shoulder).
+   - Fine-tune angle limits in code if needed.
 
 ---
 
@@ -178,20 +200,28 @@ In [`main.ino`](file:///Users/pranav/PRNV/RoboticArm/main.ino), you can easily m
 
 1. **Claw Grip Tightness**:
    - Line 16: `int motor_close = 15;`
-   - If the claw does not close enough to hold objects, increase to `25` or `30`.
+   - If the claw does not close enough to hold objects, increase to `20`, `25`, or `30`.
    - If the servo strains or clicks when gripping, decrease this angle.
-2. **Base Rotation Speed**:
+2. **Base Rotation Step**:
    - Line 31: `int base_step = 45;`
    - Change to `15` or `30` for finer, more precise base positioning.
-3. **Shoulder Range & Step**:
+3. **Elbow Movement Limits**:
+   - Lines 34-36:
+     ```cpp
+     int elbow_min = 130;
+     int elbow_max = 180;
+     int elbow_step = 20;
+     ```
+   - Try `elbow_min = 140` if forearm over-rotates.
+4. **Shoulder Range & Step**:
    - Lines 39-41:
      ```cpp
      int shoulder_min = 160;
      int shoulder_max = 180;
      int shoulder_step = 5;
      ```
-   - Expand `shoulder_min` downwards (e.g., to `140`) if you need the arm to reach further forward.
-4. **Deadzone Thresholds**:
+   - Try `shoulder_min = 155` if you need the arm to reach further forward.
+5. **Deadzone Thresholds**:
    - Lines 46-47:
      ```cpp
      const int joystick_high = 900;
@@ -218,10 +248,13 @@ In [`main.ino`](file:///Users/pranav/PRNV/RoboticArm/main.ino), you can easily m
 ## 📜 File Structure
 ```
 RoboticArm/
-├── main.ino                    # Arduino C++ control firmware
-├── robotic_arm_assembled.png   # Photo of assembled 4-DOF robotic arm
-├── joystick_modules.png        # Photo of dual HW-504 joystick controllers
-├── arduino_circuit_setup.png   # Photo of Arduino Uno & breadboard wiring
-├── step_by_step_guide.png      # Generated high-res visual wiring & control guide
-└── README.md                   # Complete documentation and setup guide
+├── main.ino                                # Arduino C++ control firmware
+├── README.md                               # Complete documentation and setup guide
+├── step_1_setup_and_assembly.png           # Visual Guide: Step 1 Setup & Assembly
+├── step_2_wiring_and_connections.png       # Visual Guide: Step 2 Wiring & Connections
+├── step_3_code_calibration_and_testing.png # Visual Guide: Step 3 Code, Calibration & Testing
+├── step_by_step_guide.png                  # Summary setup, wiring matrix & control map
+├── robotic_arm_assembled.png               # Photo of assembled 4-DOF robotic arm
+├── joystick_modules.png                    # Photo of dual HW-504 joystick controllers
+└── arduino_circuit_setup.png               # Photo of Arduino Uno & breadboard wiring
 ```
